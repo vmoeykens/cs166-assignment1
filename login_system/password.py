@@ -8,3 +8,6 @@ class Password:
 
     def __init__(self, password_value : str = ""):
         self.value = password_value
+
+    def __repr__(self):
+        return f"{self.value}"
