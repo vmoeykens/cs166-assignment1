@@ -8,6 +8,7 @@ def main():
     auth_system: AuthSystem = AuthSystem()
     auth_system.parse_user_file('data/users.csv')
     auth_system.print_users()
+    auth_system.run()
 
 
 if __name__ == "__main__":

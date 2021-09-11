@@ -9,5 +9,8 @@ class Password:
     def __init__(self, password_value : str = ""):
         self.value = password_value
 
+    def __eq__(self, other):
+        return self.value == other.value
+
     def __repr__(self):
         return f"{self.value}"
