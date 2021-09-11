@@ -22,14 +22,26 @@ class User:
 
     @staticmethod
     def build_user_from_csv(user_data: List[str]):
-        """Return a User object based on the string list extracted from the csv file storing users."""
+        """Return a User object based on the string list extracted from the csv file storing users.
+        All values except full name will have whitespace stripped.
+        :param user_data: List of strings from the parsed csv row
+        :return: User object created from the csv row.
+        """
+
         if len(user_data) != 4:
             print(f'Invalid number of parameters provided to create User object! Expected 4, got {len(user_data)}')
-        elif user_data[3] not in [level.value for level in AccessLevel]:
+            return
+
+        full_name: str = user_data[0]
+        username: str = user_data[1].replace(' ', '')
+        password: Password = Password(user_data[2].replace(' ', ''))
+        access_level_string: str = user_data[3].replace(' ', '')
+
+        if access_level_string not in [level.value for level in AccessLevel]:
             print(f'Invalid access level! Excepted one of: {[level.value for level in AccessLevel]}, got '
-                  f'{user_data[3]}')
+                  f'{access_level_string}')
         else:
-            return User(user_data[0], user_data[1], Password(user_data[2]), AccessLevel(user_data[3]))
+            return User(full_name, username, password, AccessLevel(access_level_string))
 
     def __repr__(self):
         return f'Name: {self.name}, Username: {self.username}, Password: {self.password}, ' \
