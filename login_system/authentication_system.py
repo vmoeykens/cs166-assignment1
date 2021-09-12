@@ -4,18 +4,29 @@ This class represents the Authentication system as a whole
 import csv
 from typing import Tuple, Dict
 
-from password import Password
-from user import User
+from login_system.password import Password
+from login_system.user import User
+from login_system.sub_programs.sub_program import TimeReporting, Accounting, UserManagement, DataViewer
+
+SUB_PROGRAM_MENU_OFFSET: int = 2
+EXIT_SELECTION_MENU_OFFSET: int = 1
 
 
 class AuthSystem:
     user_map: Dict[str, User] = {}
     program_list = []
+    valid_user_file: bool = False
+    user_logged_in: bool = False
+    user: User = None
 
     def __init__(self):
-        pass
+        time_reporting = TimeReporting()
+        accounting = Accounting()
+        user_management = UserManagement()
+        data_viewer = DataViewer()
+        self.program_list = [time_reporting, accounting, user_management, data_viewer]
 
-    def parse_user_file(self, file_path: str):
+    def parse_user_file(self, file_path: str, debug: bool):
         """
         Parses a given csv file containing all the users in the system. Will validate that all usernames are unique.
         If a non-unique username is found, only the first sequentially found username will be added to the system.
@@ -29,13 +40,15 @@ class AuthSystem:
                     if row != 0 and user:
                         temp_user = User.build_user_from_csv(user)
                         if temp_user:
-                            print(f"Created user | {temp_user}")
+                            if debug:
+                                print(f"Created user | {temp_user}")
                             if temp_user.username not in self.user_map:
                                 self.user_map[temp_user.username] = temp_user
                             else:
                                 print(f"Username {temp_user.username} already exists!")
                         else:
                             print(f"Unable to create User object")
+            self.valid_user_file = True
         except OSError as e:
             print(f'Error parsing file {file_path}. OS returned {e}.')
 
@@ -82,18 +95,50 @@ class AuthSystem:
         while not self.validate_password(username, password):
             print(f"Invalid password!")
             password = Password(input("Password: "))
+
+        self.user_logged_in = True
+        self.user = self.user_map[username]
+
         return password
 
     def run_login_prompt(self):
-        """
-        Runs the login prompt until a valid username and password combination is selected.
-        """
+        """Runs the login prompt until a valid username and password combination is selected."""
         username: str = self.prompt_and_validate_user()
         password: Password = self.prompt_and_validate_password(username)
 
+
+    def print_menu_options(self):
+        """Prints all the sub-program names to select."""
+        print('1. Exit')
+        for i, sub_program in enumerate(self.program_list):
+            print(f'{i + SUB_PROGRAM_MENU_OFFSET}. {sub_program}')
+        print('\n')
+
+    def run_main_menu(self):
+        """Runs the main menu to select different sub-programs until quit is selected."""
+        if not self.user_logged_in:
+            print("User not logged in! Exiting.")
+            return
+
+        menu_selection: int = 0
+        while menu_selection != EXIT_SELECTION_MENU_OFFSET:
+            self.print_menu_options()
+            menu_selection: int = int(input('Select a menu option: '))
+            if menu_selection < EXIT_SELECTION_MENU_OFFSET or menu_selection > len(self.program_list) + \
+                    EXIT_SELECTION_MENU_OFFSET:
+                print('Invalid selection!\n')
+            elif menu_selection == EXIT_SELECTION_MENU_OFFSET:
+                pass
+            else:
+                self.program_list[menu_selection - SUB_PROGRAM_MENU_OFFSET].run_program(self.user)
+        print('Exiting!')
+
     def run(self):
-        """
-        Runs the main program (login, and then menu for sub-programs)
-        """
-        self.run_login_prompt()
-        print("Login successful!")
+        """Runs the main program (login, and then menu for sub-programs)."""
+        if self.valid_user_file:
+            print("Welcome to the company intranet!\nPlease Login\n")
+            self.run_login_prompt()
+            print("Login successful!")
+            self.run_main_menu()
+        else:
+            print("User file was not valid! Exiting.")

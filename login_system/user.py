@@ -4,8 +4,8 @@ and access levels.
 """
 from typing import List
 
-from password import Password
-from access_level import AccessLevel
+from login_system.password import Password
+from login_system.access_level import AccessLevel
 
 
 class User:
