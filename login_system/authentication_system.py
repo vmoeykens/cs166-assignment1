@@ -36,7 +36,8 @@ class AuthSystem:
         :param debug: Boolean to determine whether or not to print out users as they are added
         :param file_path: Relative or absolute path to the csv file containing the user list.
         """
-        print(f'Parsing user file {file_path}.')
+        if debug:
+            print(f'Parsing user file {file_path}.')
         try:
             with open(file_path, 'r') as user_file:
                 reader = csv.reader(user_file)

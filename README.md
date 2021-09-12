@@ -1,4 +1,5 @@
 # cs166-assignment1
+Vincent Moeykens
 ### Python Standard and Modules Used
 Python 3.8, and no modules besides those in the standard library. 
 
