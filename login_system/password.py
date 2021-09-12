@@ -4,6 +4,9 @@ This class represents a user's password, for now this is just plaintext.
 
 
 class Password:
+    """
+    Basic plaintext password representation.
+    """
     value: str = ""
 
     def __init__(self, password_value : str = ""):

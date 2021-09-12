@@ -13,6 +13,9 @@ EXIT_SELECTION_MENU_OFFSET: int = 1
 
 
 class AuthSystem:
+    """
+    Authentication system that manages users and subprograms, and handles user input for navigating the system.
+    """
     user_map: Dict[str, User] = {}
     program_list = []
     valid_user_file: bool = False
@@ -30,6 +33,7 @@ class AuthSystem:
         """
         Parses a given csv file containing all the users in the system. Will validate that all usernames are unique.
         If a non-unique username is found, only the first sequentially found username will be added to the system.
+        :param debug: Boolean to determine whether or not to print out users as they are added
         :param file_path: Relative or absolute path to the csv file containing the user list.
         """
         print(f'Parsing user file {file_path}.')
@@ -105,7 +109,6 @@ class AuthSystem:
         """Runs the login prompt until a valid username and password combination is selected."""
         username: str = self.prompt_and_validate_user()
         password: Password = self.prompt_and_validate_password(username)
-
 
     def print_menu_options(self):
         """Prints all the sub-program names to select."""

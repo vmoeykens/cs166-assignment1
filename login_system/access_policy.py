@@ -8,13 +8,18 @@ import login_system.access_level as access_level
 
 
 class AccessPolicy:
-
+    """
+    Manages what levels can access something within this policy and performs validation on a requesting level.
+    """
     def __init__(self):
-        self.valid_levels = []
+        self.valid_levels: List[access_level.AccessLevel] = []
         self.valid_levels.append(access_level.AccessLevel.Admin)
 
     def add_level(self, level: access_level.AccessLevel):
-        """Adds a new level to the access policy."""
+        """
+        Adds a new level to the access policy.
+        :param level: Access level to add to this policy.
+        """
         if level not in self.valid_levels:
             self.valid_levels.append(level)
 

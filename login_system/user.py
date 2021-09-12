@@ -9,6 +9,9 @@ from login_system.access_level import AccessLevel
 
 
 class User:
+    """
+    Represent a user and their values include password as plaintext and access level.
+    """
     name: str = ""
     username: str = ""
     password: Password = Password()
@@ -22,7 +25,8 @@ class User:
 
     @staticmethod
     def build_user_from_csv(user_data: List[str]):
-        """Return a User object based on the string list extracted from the csv file storing users.
+        """
+        Return a User object based on the string list extracted from the csv file storing users.
         All values except full name will have whitespace stripped.
         :param user_data: List of strings from the parsed csv row
         :return: User object created from the csv row.
